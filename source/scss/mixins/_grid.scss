@@ -1,0 +1,153 @@
+// Grid system
+//
+// Generate semantic grid columns with these mixins.
+
+@mixin make-container($gutters: $grid-gutter-widths) {
+  //position: relative;
+  margin-left: auto;
+  margin-right: auto;
+
+  @if type_of($gutters) == number {
+    $gutters: (xs: $gutters);
+  } @else if type_of($gutters) == map {
+  } @else {
+    @error 'Invalid type of parameter.';
+  }
+
+  $prev-gutter: null;
+  @each $breakpoint in map-keys($gutters) {
+    $gutter: map-get($gutters, $breakpoint);
+    @if ($prev-gutter != $gutter) {
+      $prev-gutter: $gutter;
+      @include media-breakpoint-up($breakpoint) {
+        $gutter: map-get($gutters, $breakpoint);
+        padding-right: ($gutter / 2);
+        padding-left: ($gutter / 2);
+      }
+    }
+  }
+}
+
+// For each breakpoint, define the maximum width of the container in a media query
+@mixin make-container-max-widths($max-widths: $container-max-widths, $breakpoints: $grid-breakpoints) {
+  @each $breakpoint, $container-max-width in $max-widths {
+    @include media-breakpoint-up($breakpoint, $breakpoints) {
+      width: $container-max-width;
+      max-width: 100%;
+    }
+  }
+}
+
+@mixin make-gutters($gutters: $grid-gutter-widths, $half: true) {
+  @if type_of($gutters) == number {
+    $gutters: (xs: $gutters);
+  } @else if type_of($gutters) == map {
+  } @else {
+    @error 'Invalid type of parameter.';
+  }
+
+  $prev-gutter: null;
+  @each $breakpoint in map-keys($gutters) {
+    $gutter: map-get($gutters, $breakpoint);
+    @if ($prev-gutter != $gutter) {
+      $prev-gutter: $gutter;
+      @include media-breakpoint-up($breakpoint) {
+        $gutter: map-get($gutters, $breakpoint);
+        @if ($half) {
+          padding-right: ($gutter / 2);
+          padding-left: ($gutter / 2);
+        } @else {
+          padding-right: ($gutter);
+          padding-left: ($gutter);
+        }
+      }
+    }
+  }
+}
+
+@mixin make-margins($gutters: $grid-gutter-widths, $half: true) {
+  @if type_of($gutters) == number {
+    $gutters: (xs: $gutters);
+  } @else if type_of($gutters) == map {
+  } @else {
+    @error 'Invalid type of parameter.';
+  }
+
+  $prev-gutter: null;
+  @each $breakpoint in map-keys($gutters) {
+    $gutter: map-get($gutters, $breakpoint);
+    @if ($prev-gutter != $gutter) {
+      $prev-gutter: $gutter;
+      @include media-breakpoint-up($breakpoint) {
+        $gutter: map-get($gutters, $breakpoint);
+        @if ($half) {
+          margin-right: ($gutter / -2);
+          margin-left: ($gutter / -2);
+        } @else {
+          margin-right: ($gutter / -1);
+          margin-left: ($gutter / -1);
+        }
+      }
+    }
+  }
+}
+
+@mixin make-row($gutters: $grid-gutter-widths) {
+  &::before, &::after { content: ''; display: table; }
+  &::after { clear: both; }
+  @include make-margins($gutters);
+}
+
+@mixin make-col-ready($gutters: $grid-gutter-widths) {
+  position: relative;
+  float: left;
+  width: 100%;
+  min-height: 1px; // Prevent collapsing
+
+  @if type_of($gutters) == number {
+    $gutters: (xs: $gutters);
+  } @else if type_of($gutters) == map {
+  } @else {
+    @error 'Invalid type of parameter.';
+  }
+
+  $prev-gutter: null;
+  @each $breakpoint in map-keys($gutters) {
+    $gutter: map-get($gutters, $breakpoint);
+    @if ($prev-gutter != $gutter) {
+      $prev-gutter: $gutter;
+      @include media-breakpoint-up($breakpoint) {
+        $gutter: map-get($gutters, $breakpoint);
+        padding-right: ($gutter / 2);
+        padding-left: ($gutter / 2);
+      }
+    }
+  }
+}
+
+@mixin make-col($size, $columns: $grid-columns) {
+  width: percentage($size / $columns);
+}
+
+@mixin make-col-offset($size, $columns: $grid-columns) {
+  margin-left: percentage($size / $columns);
+}
+
+@mixin make-col-push($size, $columns: $grid-columns) {
+  left: if($size > 0, percentage($size / $columns), auto);
+}
+
+@mixin make-col-pull($size, $columns: $grid-columns) {
+  right: if($size > 0, percentage($size / $columns), auto);
+}
+
+@mixin make-col-modifier($type, $size, $columns) {
+  // Work around the lack of dynamic mixin @include support (https://github.com/sass/sass/issues/626)
+  @if $type == push {
+    @include make-col-push($size, $columns);
+  } @else if $type == pull {
+    @include make-col-pull($size, $columns);
+  } @else if $type == offset {
+    @include make-col-offset($size, $columns);
+  }
+}

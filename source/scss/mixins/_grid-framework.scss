@@ -1,0 +1,54 @@
+// Framework grid generation
+//
+// Used only by Bootstrap to generate the correct number of grid classes given
+// any value of `$grid-columns`.
+
+@mixin make-grid-columns($columns: $grid-columns, $gutters: $grid-gutter-widths, $breakpoints: $grid-breakpoints) {
+  // Common properties for all breakpoints
+  %grid-column {
+    float: left;
+    //position: relative;
+    width: 100%;
+    min-height: 1px; // Prevent columns from collapsing when empty
+
+    @include make-gutters($gutters);
+  }
+
+  @each $breakpoint in map-keys($breakpoints) {
+    $infix: breakpoint-infix($breakpoint, $breakpoints);
+
+    @for $i from 1 through $columns {
+      .col#{$infix}-#{$i} {
+        @extend %grid-column;
+      }
+    }
+
+    .col { /* #{$breakpoint}: #{map_get($breakpoints, $breakpoint)} and up */
+      @include media-breakpoint-up($breakpoint, $breakpoints) {
+        @for $i from 1 through $columns {
+          &#{$infix}-#{$i} {
+            @include make-col($i, $columns);
+          }
+        }
+
+        @each $modifier in (pull, push) {
+          @for $i from 0 through $columns {
+            &#{$infix}-#{$modifier}-#{$i} {
+              position: relative;
+              @include make-col-modifier($modifier, $i, $columns)
+            }
+          }
+        }
+
+        // `$columns - 1` because offsetting by the width of an entire row isn't possible
+        @for $i from 0 through ($columns - 1) {
+          @if not ($infix == "" and $i == 0) { // Avoid emitting useless .offset-xs-0
+            &#{$infix}-offset-#{$i} {
+              @include make-col-modifier(offset, $i, $columns)
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+//* Grid system
+//  ========================================================================= */
+
+@mixin make-grid-system() {
+  .container-fluid {
+    @include make-container();
+  }
+
+  .container {
+    @include make-container();
+    @include make-container-max-widths();
+  }
+
+  .row {
+    @include make-row();
+  }
+
+  @include make-grid-columns();
+}

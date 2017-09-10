@@ -1,0 +1,19 @@
+{
+  "name": "bs-grid-system",
+  "homepage": "https://github.com/delphinpro/bs-grid-system",
+  "authors": [
+    "delphinpro <delphinpro@gmail.com>"
+  ],
+  "description": "Slightly modified bootstrap grid system",
+  "main": [
+    "source/scss/_bs-grid.scss"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
