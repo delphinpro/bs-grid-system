@@ -42,3 +42,12 @@ $grid-gutter-widths: (
 
 $grid-float-breakpoint: map_get($grid-breakpoints, sm);
 $grid-float-breakpoint-max: $grid-float-breakpoint - 1;
+
+$grid-container-class: 'container' !default;
+$grid-container-fluid-class: 'container-fluid' !default;
+$grid-row-class: 'row' !default;
+$grid-col-class: 'col' !default;
+
+$grid-col-push-classes: true !default;
+$grid-col-pull-classes: true !default;
+$grid-col-offset-classes: true !default;

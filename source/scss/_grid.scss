@@ -2,17 +2,23 @@
 //  ========================================================================= */
 
 @mixin make-grid-system() {
-  .container-fluid {
-    @include make-container();
+  @if ($grid-container-fluid-class) {
+    .#{$grid-container-fluid-class} {
+      @include make-container();
+    }
   }
 
-  .container {
-    @include make-container();
-    @include make-container-max-widths();
+  @if ($grid-container-class) {
+    .#{$grid-container-class} {
+      @include make-container();
+      @include make-container-max-widths();
+    }
   }
 
-  .row {
-    @include make-row();
+  @if ($grid-row-class) {
+    .#{$grid-row-class} {
+      @include make-row();
+    }
   }
 
   @include make-grid-columns();

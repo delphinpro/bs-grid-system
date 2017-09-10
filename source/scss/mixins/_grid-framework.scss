@@ -4,6 +4,12 @@
 // any value of `$grid-columns`.
 
 @mixin make-grid-columns($columns: $grid-columns, $gutters: $grid-gutter-widths, $breakpoints: $grid-breakpoints) {
+  $col: 'col';
+
+  @if ($grid-col-class) {
+    $col: $grid-col-class;
+  }
+
   // Common properties for all breakpoints
   %grid-column {
     float: left;
@@ -18,12 +24,12 @@
     $infix: breakpoint-infix($breakpoint, $breakpoints);
 
     @for $i from 1 through $columns {
-      .col#{$infix}-#{$i} {
+      .#{$col}#{$infix}-#{$i} {
         @extend %grid-column;
       }
     }
 
-    .col { /* #{$breakpoint}: #{map_get($breakpoints, $breakpoint)} and up */
+    .#{$col} { /* #{$breakpoint}: #{map_get($breakpoints, $breakpoint)} and up */
       @include media-breakpoint-up($breakpoint, $breakpoints) {
         @for $i from 1 through $columns {
           &#{$infix}-#{$i} {
@@ -31,7 +37,17 @@
           }
         }
 
-        @each $modifier in (pull, push) {
+        $modifiers: [];
+
+        @if($grid-col-pull-classes) {
+          $modifiers: append($modifiers, pull);
+        }
+
+        @if($grid-col-push-classes) {
+          $modifiers: append($modifiers, push);
+        }
+
+        @each $modifier in $modifiers {
           @for $i from 0 through $columns {
             &#{$infix}-#{$modifier}-#{$i} {
               position: relative;
@@ -40,11 +56,13 @@
           }
         }
 
-        // `$columns - 1` because offsetting by the width of an entire row isn't possible
-        @for $i from 0 through ($columns - 1) {
-          @if not ($infix == "" and $i == 0) { // Avoid emitting useless .offset-xs-0
-            &#{$infix}-offset-#{$i} {
-              @include make-col-modifier(offset, $i, $columns)
+        @if ($grid-col-offset-classes) {
+          // `$columns - 1` because offsetting by the width of an entire row isn't possible
+          @for $i from 0 through ($columns - 1) {
+            @if not ($infix == "" and $i == 0) { // Avoid emitting useless .offset-xs-0
+              &#{$infix}-offset-#{$i} {
+                @include make-col-modifier(offset, $i, $columns)
+              }
             }
           }
         }
