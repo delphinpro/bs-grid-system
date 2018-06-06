@@ -40,7 +40,7 @@ $grid-gutter-widths: (
     xl: $grid-gutter-width-base,
 ) !default;
 
-$grid-float-breakpoint: map_get($grid-breakpoints, sm);
+$grid-float-breakpoint: map_get($grid-breakpoints, sm) !default;
 $grid-float-breakpoint-max: $grid-float-breakpoint - 1;
 
 $grid-container-class: 'container' !default;
