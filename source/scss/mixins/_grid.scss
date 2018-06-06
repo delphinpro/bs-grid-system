@@ -70,22 +70,42 @@
 }
 
 @mixin make-row($gutters: $grid-gutter-widths) {
-  &::before, &::after { content: ''; display: table; }
-  &::after { clear: both; }
+  @if ($grid-use-flex) {
+    display: flex;
+    flex-wrap: wrap;
+  } @else {
+    &::before, &::after { content: ''; display: table; }
+    &::after { clear: both; }
+  }
+  @include make-margins($gutters);
+}
+
+@mixin make-row-flex($gutters: $grid-gutter-widths) {
+  display: flex;
+  flex-wrap: wrap;
   @include make-margins($gutters);
 }
 
 @mixin make-col-ready($gutters: $grid-gutter-widths) {
+  box-sizing: border-box;
   position: relative;
-  float: left;
   width: 100%;
-  min-height: 1px; // Prevent collapsing
+
+  @if ($grid-use-flex) {
+    flex: 0 0 100%;
+  } @else {
+    float: left;
+    min-height: 1px; // Prevent collapsing
+  }
 
   @include make-gutters($gutters);
 }
 
 @mixin make-col($size, $columns: $grid-columns) {
   width: percentage($size / $columns);
+  @if ($grid-use-flex) {
+    flex: 0 0 percentage($size / $columns);
+  }
 }
 
 @mixin make-col-offset($size, $columns: $grid-columns) {

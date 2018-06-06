@@ -57,3 +57,8 @@ $grid-col-offset-classes: true !default;
 // Use rem units for breakpoints instead pixels.
 // Required package vRhythm
 $grid-use-rem: false !default;
+
+// Grid option
+//
+// Use flex layout instead float blocks.
+$grid-use-flex: false !default;
