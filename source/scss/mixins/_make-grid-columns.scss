@@ -16,6 +16,7 @@
     //position: relative;
     width: 100%;
     min-height: 1px; // Prevent columns from collapsing when empty
+    @content;
 
     @include make-gutters($gutters);
   }

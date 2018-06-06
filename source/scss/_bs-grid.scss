@@ -1,3 +1,5 @@
 @import "grid.cfg";
-@import "mixins";
+@import "mixins/breakpoints";
+@import "mixins/grid";
+@import "mixins/make-grid-columns";
 @import "mixins/make-grid-system";
