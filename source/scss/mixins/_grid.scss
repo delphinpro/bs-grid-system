@@ -87,7 +87,6 @@
 }
 
 @mixin make-col-ready($gutters: $grid-gutter-widths) {
-  box-sizing: border-box;
   position: relative;
   width: 100%;
 
@@ -96,6 +95,10 @@
   } @else {
     float: left;
     min-height: 1px; // Prevent collapsing
+  }
+
+  @if ($grid-add-box-sizing) {
+    box-sizing: border-box;
   }
 
   @include make-gutters($gutters);

@@ -62,3 +62,8 @@ $grid-use-rem: false !default;
 //
 // Use flex layout instead float blocks.
 $grid-use-flex: false !default;
+
+// Grid option
+//
+// Add box-sizing rule for columns. Required if isn't defined global in your stylesheet.
+$grid-add-box-sizing: true !default;
