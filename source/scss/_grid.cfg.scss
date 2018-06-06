@@ -51,3 +51,9 @@ $grid-col-class: 'col' !default;
 $grid-col-push-classes: true !default;
 $grid-col-pull-classes: true !default;
 $grid-col-offset-classes: true !default;
+
+// Grid option
+//
+// Use rem units for breakpoints instead pixels.
+// Required package vRhythm
+$grid-use-rem: false !default;
