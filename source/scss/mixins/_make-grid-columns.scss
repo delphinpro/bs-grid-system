@@ -12,13 +12,14 @@
 
   // Common properties for all breakpoints
   %grid-column {
-    float: left;
-    //position: relative;
-    width: 100%;
-    min-height: 1px; // Prevent columns from collapsing when empty
+    @include make-col-ready($gutters);
+    //float: left;
+    ////position: relative;
+    //width: 100%;
+    //min-height: 1px; // Prevent columns from collapsing when empty
+    //
+    //@include make-gutters($gutters);
     @content;
-
-    @include make-gutters($gutters);
   }
 
   @each $breakpoint in map-keys($breakpoints) {
