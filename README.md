@@ -4,6 +4,8 @@
 ##Установка
 ```cmd
 bower i -S bs-grid-system
+
+npm i -S bs-grid-system
 ```
 
 ##Подключение
@@ -12,7 +14,10 @@ bower i -S bs-grid-system
 и задайте нужные опции.
 ```cmd
 @import ./my-custom-settings.scss
-@import ./bower_components/source/scss/bs-grid.scss
+
+@import ./bower_components/bs-grid-system/source/scss/bs-grid.scss
+// or
+@import ./node_modules/bs-grid-system/source/scss/bs-grid.scss
 
 @include make-grid-system();
 ```
