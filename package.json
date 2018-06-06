@@ -1,0 +1,23 @@
+{
+  "name": "bs-grid-system",
+  "version": "2.0.0",
+  "description": "modified bootstrap grid system",
+  "main": "source/scss/_bs_grid.scss",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/delphinpro/bs-grid-system.git"
+  },
+  "keywords": [
+    "grid",
+    "system"
+  ],
+  "author": "delphinpro <delphinpro@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/delphinpro/bs-grid-system/issues"
+  },
+  "homepage": "https://github.com/delphinpro/bs-grid-system#readme"
+}
