@@ -105,9 +105,11 @@
 }
 
 @mixin make-col($size, $columns: $grid-columns) {
-  width: percentage($size / $columns);
   @if ($grid-use-flex) {
-    flex: 0 0 percentage($size / $columns);
+    flex-basis: percentage($size / $columns);
+    max-width: percentage($size / $columns);
+  } @else {
+    width: percentage($size / $columns);
   }
 }
 
