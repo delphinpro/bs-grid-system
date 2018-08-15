@@ -92,6 +92,7 @@
 
   @if ($grid-use-flex) {
     flex: 0 0 100%;
+    max-width: 100%;
   } @else {
     float: left;
     min-height: 1px; // Prevent collapsing
