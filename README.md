@@ -1,53 +1,68 @@
 # bs-grid-system
 
-Модифицированная bootstrap-сетка.
+Немного модифицированная bootstrap-сетка.
 
 ## Установка
 
 ```cmd
-bower i -S bs-grid-system
-
-npm i -S bs-grid-system
+npm install bs-grid-system
 ```
 
 ## Подключение
 
 Импортируйте файлы пакета и вызовите миксин `make-grid-system()` для генерации стилей сетки.
-Для изменения настроек скопируйте в вашу source директорию файл `_grid.cfg.scss`, подключите его перед файлами пакета
-и задайте нужные опции.
+По умолчанию генерируется минимальная сетка, включающая только контейнер,
+строки и столбики (см. опции генерации сетки ниже).
+Для изменения настроек скопируйте в вашу source директорию файл `bg-grid-config.scss`,
+подключите его перед файлами пакета и задайте нужные опции.
 
 ```cmd
 @import ./my-custom-settings.scss
-
-@import ./bower_components/bs-grid-system/source/scss/bs-grid.scss
-// or
-@import ./node_modules/bs-grid-system/source/scss/bs-grid.scss
+@import ./node_modules/bs-grid-system/bs-grid.scss
 
 @include make-grid-system();
 ```
 
-## Опции
+## Определенные переменные
 
-| Опция           | Описание
+| Опция                     | Описание
 | ---:|:---
-| `$grid-breakpoint`        | Список точек переключения. По умолчанию задано пять точек, вы можете задать ихх сколько угодно.
+| `$grid-breakpoints`       | Список точек переключения. По умолчанию задано пять точек, вы можете задать их сколько угодно.
 | `$container-max-widths`   | Список ширин контейнера для каждой точки переключения, кроме минимальной (ноль)
 | `$grid-columns`           | Количество колонок в сетке
-| `$grid-gutter-width-base` | Базовая ширина промежутка между колонками. Не рекомендуется к использованию. См. опцию `$grid-gutter-widths`
 | `$grid-gutter-widths`     | Ширины промежутков между колонками для каждой точки переключения
 | `$grid-use-rem`           | Включает генерацию сетки с точками переключения, выраженными в единицах `rem`. Для работы необходим пакет vRhythm
-| `$grid-use-flex`          | Включает генерацию сетки с использованием flex-раскладки
-| `$grid-add-box-sizing`    | Добавляет правило `box-sizing: border-box` для колонок. Вы можете отключить эту опцию, если у вас, например, задано глобальное правило `*{box-sizing:border-box}`
+| `$grid-add-box-sizing`    | Добавляет правило `box-sizing: border-box` для колонок и контейнеров. Вы можете отключить эту опцию, если у вас, например, задано глобальное правило `*{box-sizing:border-box}`
+| `$grid-row-columns`       | см. bootstrap
+| `$grid-classes`           | CSS классы сетки (см. ниже)
+| `$grid-enable`            | Включение/отключение генерации разных частей сетки (см. ниже)
+| `$utilites`               | Карта утилитарных классов (см. bootstrap)
 
-| Опция                         | По умолчанию        | Описание
-| ---:|:---:|:---
-| `$grid-container-class`       | `'container'`       | Css-класс для блоков-контейнеров
-| `$grid-container-fluid-class` | `'container-fluid'` | Css-класс для блоков-контейнеров без ограничения ширины
-| `$grid-row-class`             | `'row'`             | Css-класс для блоков-строк
-| `$grid-col-class`             | `'col'`             | Префикс css-класса для блоков-колонок
-| `$grid-col-push-classes`      | `true`              | Включает генерацию классов `.col-*-push-*`
-| `$grid-col-pull-classes`      | `true`              | Включает генерацию классов `.col-*-pull-*`
-| `$grid-col-offset-classes`    | `true`              | Включает генерацию классов `.col-*-offset-*`
+## CSS классы сетки (`$grid-classes`)
+
+| Опция             | По умолчанию        | Описание
+|:---|:---|:---
+| `container`       | `container`       | Контейнер с ограниченной шириной
+| `container-fluid` | `container-fluid` | Контейнер без ограничения ширины
+| `row`             | `row`             | Строки
+| `col`             | `col`             | Столбцы
+| `offset`          | `offset`          | Смещение столбцов
+| `row-cols`        | `row-cols`        | 
+| `no-gutters`      | `no-gutters`      | Без внутренних отступов
+
+## Опции генерации сетки (`$grid-enable`)
+
+| Опция                   | По умолчанию | Описание
+|:---|:---|:---
+| `container`             | `true`       | Контейнер с ограниченной шириной
+| `container-fluid`       | `false`      | Контейнер без ограничения ширины
+| `responsive-containers` | `false`      | Контейнеры для отдельных точек переключения
+| `row`                   | `true`       | Строки
+| `columns`               | `true`       | Столбцы
+| `offset-classes`        | `false`      | Смещение столбцов
+| `row-cols-classes`      | `false`      | 
+| `no-gutters`            | `true`       | Без внутренних отступов
+| `utilities`             | `false`      | Утилитарные классы
 
 ## Использование
 
