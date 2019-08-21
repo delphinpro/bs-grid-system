@@ -1,25 +1,97 @@
-//* Grid system
-//  ========================================================================= */
+//== Grid system
+//== ===================================================================== ==//
 
 @mixin make-grid-system() {
-  @if ($grid-container-fluid-class) {
-    .#{$grid-container-fluid-class} {
-      @include make-container();
+  $container-class: map_get($grid-classes, container);
+  $container-fluid-class: map_get($grid-classes, container-fluid);
+  $row-class: map_get($grid-classes, row);
+  $col-class: map_get($grid-classes, col);
+  $no-gutters-class: map_get($grid-classes, no-gutters);
+
+  $enable-container: map_get($grid-enable, container);
+  $enable-container-fluid: map_get($grid-enable, container-fluid);
+  $enable-responsive-containers: map_get($grid-enable, responsive-containers);
+  $enable-row: map_get($grid-enable, row);
+  $enable-columns: map_get($grid-enable, columns);
+  $enable-no-gutters: map_get($grid-enable, no-gutters);
+  $enable-utilities: map_get($grid-enable, utilities);
+
+  %base-container {
+    @include make-container();
+  }
+
+  // 100% wide container at all breakpoints
+  @if ($enable-container-fluid) {
+    .#{$container-fluid-class} {
+      @extend %base-container;
     }
   }
 
-  @if ($grid-container-class) {
-    .#{$grid-container-class} {
-      @include make-container();
+  // Single container class with breakpoint max-widths
+  @if ($enable-container) {
+    .#{$container-class} {
+      @extend %base-container;
       @include make-container-max-widths();
     }
-  }
-
-  @if ($grid-row-class) {
-    .#{$grid-row-class} {
-      @include make-row();
+  } @else {
+    @if $enable-responsive-containers {
+      .#{$container-class} {
+        @extend %base-container;
+      }
     }
   }
 
-  @include make-grid-columns();
+  //// Responsive containers that are 100% wide until a breakpoint
+  @if $enable-responsive-containers {
+    @each $breakpoint, $container-max-width in $container-max-widths {
+      .#{$container-class}-#{$breakpoint} {
+        @extend %base-container;
+      }
+
+      @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
+        %responsive-#{$container-class}-#{$breakpoint} {
+          max-width: $container-max-width;
+        }
+
+        @each $name, $width in $grid-breakpoints {
+          @if ($container-max-width > $width or $breakpoint == $name) {
+            .#{$container-class}#{breakpoint-infix($name, $grid-breakpoints)} {
+              @extend %responsive-#{$container-class}-#{$breakpoint};
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @if ($enable-row) {
+    .#{$row-class} {
+      @include make-row();
+    }
+
+    @if $enable-no-gutters {
+      // Remove the negative margin from default .row, then the horizontal padding
+      // from all immediate children columns (to prevent runaway style inheritance).
+      .#{$no-gutters-class} {
+        margin-right: 0;
+        margin-left: 0;
+
+        @if ($enable-columns) {
+          > .#{$col-class},
+          > [class*="#{$col-class}-"] {
+            padding-right: 0;
+            padding-left: 0;
+          }
+        }
+      }
+    }
+  }
+
+  @if $enable-columns {
+    @include make-grid-columns();
+  }
+
+  @if $enable-utilities {
+    @include make-grid-utilities();
+  }
 }

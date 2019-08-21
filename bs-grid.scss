@@ -1,5 +1,7 @@
 @import "bs-grid-config";
+@import "mixins/service";
 @import "mixins/breakpoints";
 @import "mixins/grid";
 @import "mixins/make-grid-columns";
 @import "mixins/make-grid-system";
+@import "mixins/make-grid-utilites";

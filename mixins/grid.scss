@@ -1,59 +1,10 @@
-// Grid system
-//
-// Generate semantic grid columns with these mixins.
-
-@mixin make-gutters($gutters: $grid-gutter-widths, $half: true) {
-  @if type_of($gutters) == number {
-    $gutters: (xs: $gutters);
-  } @else if type_of($gutters) == map {
-  } @else {
-    @error 'Invalid type of parameter.';
-  }
-
-  $prev-gutter: null;
-  @each $breakpoint in map-keys($gutters) {
-    $gutter: map-get($gutters, $breakpoint);
-    @if ($prev-gutter != $gutter) {
-      $prev-gutter: $gutter;
-      @include media-breakpoint-up($breakpoint) {
-        $gutter: map-get($gutters, $breakpoint);
-        $value: if($half, $gutter / 2, $gutter);
-        $value: if(unit($value) == '', $value * 0px, $value);
-        $value: if(grid-use-rem(), convert-length($value, rem), $value);
-        padding-right: $value;
-        padding-left: $value;
-      }
-    }
-  }
-}
-
-@mixin make-margins($gutters: $grid-gutter-widths, $half: true) {
-  @if type_of($gutters) == number {
-    $gutters: (xs: $gutters);
-  } @else if type_of($gutters) == map {
-  } @else {
-    @error 'Invalid type of parameter.';
-  }
-
-  $prev-gutter: null;
-  @each $breakpoint in map-keys($gutters) {
-    $gutter: map-get($gutters, $breakpoint);
-    @if ($prev-gutter != $gutter) {
-      $prev-gutter: $gutter;
-      @include media-breakpoint-up($breakpoint) {
-        $gutter: map-get($gutters, $breakpoint);
-        $value: if($half, $gutter / -2, $gutter / -1);
-        $value: if(unit($value) == '', $value * 0px, $value);
-        $value: if(grid-use-rem(), convert-length($value, rem), $value);
-        margin-right: $value;
-        margin-left: $value;
-      }
-    }
-  }
-}
+//== Grid system
+//== Generate semantic grid columns with these mixins.
+//== ===================================================================== ==//
 
 @mixin make-container($gutters: $grid-gutter-widths) {
   @include make-gutters($gutters);
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 
@@ -62,85 +13,67 @@
   }
 }
 
-// For each breakpoint, define the maximum width of the container in a media query
+//== For each breakpoint, define the maximum width of the container in a media query
+//== ===================================================================== ==//
+
 @mixin make-container-max-widths($max-widths: $container-max-widths, $breakpoints: $grid-breakpoints) {
-  max-width: 100%;
   @each $breakpoint, $container-max-width in $max-widths {
     @include media-breakpoint-up($breakpoint, $breakpoints) {
-      width: if(grid-use-rem(), convert-length($container-max-width, rem), $container-max-width);
+      //noinspection CssInvalidFunction
+      max-width: if(grid-use-rem(), convert-length($container-max-width, rem), $container-max-width);
     }
   }
 }
 
 @mixin make-row($gutters: $grid-gutter-widths) {
-  @if ($grid-use-flex) {
-    display: flex;
-    flex-wrap: wrap;
-  } @else {
-    &::before, &::after {
-      content: '';
-      display: table;
-    }
-    &::after {
-      clear: both;
-    }
-  }
   @include make-margins($gutters);
-}
-
-@mixin make-row-flex($gutters: $grid-gutter-widths) {
   display: flex;
   flex-wrap: wrap;
-  @include make-margins($gutters);
 }
 
 @mixin make-col-ready($gutters: $grid-gutter-widths) {
-  position: relative;
+  @include make-gutters($gutters);
+  // Prevent columns from becoming too narrow when at smaller grid tiers by
+  // always setting `width: 100%;`. This works because we use `flex` values
+  // later on to override this initial width.
   width: 100%;
-
-  @if ($grid-use-flex) {
-    flex: 0 0 100%;
-    max-width: 100%;
-  } @else {
-    float: left;
-    min-height: 1px; // Prevent collapsing
-  }
+  //flex: 0 0 100%;
+  //max-width: 100%;
 
   @if ($grid-add-box-sizing) {
     box-sizing: border-box;
   }
-
-  @include make-gutters($gutters);
 }
 
 @mixin make-col($size, $columns: $grid-columns) {
-  @if ($grid-use-flex) {
-    flex-basis: percentage($size / $columns);
-    max-width: percentage($size / $columns);
-  } @else {
-    width: percentage($size / $columns);
-  }
+  flex: 0 0 percentage($size / $columns);
+  // Add a `max-width` to ensure content within each column does not blow out
+  // the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
+  // do not appear to require this.
+  max-width: percentage($size / $columns);
+}
+
+@mixin make-col-auto() {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%; // Reset earlier grid tiers
 }
 
 @mixin make-col-offset($size, $columns: $grid-columns) {
-  margin-left: percentage($size / $columns);
+  $num: $size / $columns;
+  margin-left: if($num == 0, 0, percentage($num));
 }
 
-@mixin make-col-push($size, $columns: $grid-columns) {
-  left: if($size > 0, percentage($size / $columns), auto);
-}
+//== Row columns
+//==
+//== Specify on a parent element(e.g., .row) to force immediate children into NN
+//== number of columns. Supports wrapping to new lines, but does not do a Masonry
+//== style grid.
+//== ===================================================================== ==//
 
-@mixin make-col-pull($size, $columns: $grid-columns) {
-  right: if($size > 0, percentage($size / $columns), auto);
-}
-
-@mixin make-col-modifier($type, $size, $columns) {
-  // Work around the lack of dynamic mixin @include support (https://github.com/sass/sass/issues/626)
-  @if $type == push {
-    @include make-col-push($size, $columns);
-  } @else if $type == pull {
-    @include make-col-pull($size, $columns);
-  } @else if $type == offset {
-    @include make-col-offset($size, $columns);
+@mixin row-cols($count) {
+  & > * {
+    flex: 0 0 100% / $count;
+    max-width: 100% / $count;
   }
 }

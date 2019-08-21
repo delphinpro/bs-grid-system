@@ -1,69 +1,190 @@
-//== Media queries breakpoints
-//
-//## Define the breakpoints at which your layout will change, adapting to different screen sizes.
-
-// Grid breakpoints
-//
-// Define the minimum dimensions at which your layout will change,
-// adapting to different screen sizes, for use in media queries.
+//== Grid breakpoints
+//==
+//== Define the minimum dimensions at which your layout will change,
+//== adapting to different screen sizes, for use in media queries.
+//== ===================================================================== ==//
 
 $grid-breakpoints: (
-    xs: 0,
-    sm: 576px,
-    md: 768px,
-    lg: 992px,
-    xl: 1200px,
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
 ) !default;
 
-// Grid containers
-//
-// Define the maximum width of `.container` for different screen sizes.
+//== Grid containers
+//==
+//== Define the maximum width of `.container` for different screen sizes.
+//== ===================================================================== ==//
 
 $container-max-widths: (
-    sm: 540px,
-    md: 720px,
-    lg: 960px,
-    xl: 1170px,
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1170px,
 ) !default;
 
-// Grid columns
-//
-// Set the number of columns and specify the width of the gutters.
+//== Grid columns
+//==
+//== Set the number of columns and specify the width of the gutters.
+//== ===================================================================== ==//
 
 $grid-columns: 12 !default;
-$grid-gutter-width-base: 30px !default;
+$grid-row-columns: 6 !default;
 $grid-gutter-widths: (
-    xs: $grid-gutter-width-base,
-    sm: $grid-gutter-width-base,
-    md: $grid-gutter-width-base,
-    lg: $grid-gutter-width-base,
-    xl: $grid-gutter-width-base,
+  xs: 30px,
+  sm: 30px,
+  md: 30px,
+  lg: 30px,
+  xl: 30px,
 ) !default;
 
-$grid-float-breakpoint: map_get($grid-breakpoints, sm) !default;
-$grid-float-breakpoint-max: $grid-float-breakpoint - 1;
+//== Grid classes names
+//== ===================================================================== ==//
 
-$grid-container-class: 'container' !default;
-$grid-container-fluid-class: 'container-fluid' !default;
-$grid-row-class: 'row' !default;
-$grid-col-class: 'col' !default;
+$grid-classes: () !default;
+$grid-classes: map-merge((
+  container : 'container',
+  container-fluid: 'container-fluid',
+  row: 'row',
+  col: 'col',
+  offset: 'offset',
+  row-cols: 'row-cols',
+  no-gutters: 'no-gutters',
+), $grid-classes);
 
-$grid-col-push-classes: true !default;
-$grid-col-pull-classes: true !default;
-$grid-col-offset-classes: true !default;
+//== Generated grid classes
+//== ===================================================================== ==//
 
-// Grid option
-//
-// Use rem units for breakpoints instead pixels.
-// Required package vRhythm
+$grid-enable: () !default;
+$grid-enable: map-merge((
+  container: true,
+  container-fluid: false,
+  responsive-containers: false,
+  row: true,
+  columns: true,
+  offset-classes: false,
+  col-auto-classes: false,
+  row-cols-classes: false,
+  no-gutters: true,
+  utilities: false,
+), $grid-enable);
+
+//== Use rem units for breakpoints instead pixels.
+//== Required package vRhythm
+//== ===================================================================== ==//
 $grid-use-rem: false !default;
 
-// Grid option
-//
-// Use flex layout instead float blocks.
-$grid-use-flex: false !default;
-
-// Grid option
-//
-// Add box-sizing rule for columns. Required if isn't defined global in your stylesheet.
+//== Add box-sizing rule for columns.
+//== Required if isn't defined global in your stylesheet.
+//== ===================================================================== ==//
 $grid-add-box-sizing: true !default;
+
+//== Utilities
+//== ===================================================================== ==//
+$utilities: () !default;
+$utilities: map-merge((
+  "align": (
+    property: vertical-align,
+    class: align,
+    values: baseline top middle bottom
+  ),
+  "float": (
+    responsive: true,
+    property: float,
+    values: left right none
+  ),
+  "overflow": (
+    property: overflow,
+    values: auto hidden,
+  ),
+  "display": (
+    responsive: true,
+    print: true,
+    property: display,
+    class: d,
+    values: none inline inline-block block flex inline-flex
+  ),
+  "position": (
+    property: position,
+    values: static relative absolute fixed sticky
+  ),
+  // Flex utilities
+  "flex": (
+    responsive: true,
+    property: flex,
+    values: (fill: 1 1 auto)
+  ),
+  "flex-direction": (
+    responsive: true,
+    property: flex-direction,
+    class: flex,
+    values: row column row-reverse column-reverse
+  ),
+  "flex-wrap": (
+    responsive: true,
+    property: flex-wrap,
+    class: flex,
+    values: wrap nowrap
+  ),
+  "justify-content": (
+    responsive: true,
+    property: justify-content,
+    values: (
+      start: flex-start,
+      end: flex-end,
+      center: center,
+      between: space-between,
+      around: space-around,
+    )
+  ),
+  "align-items": (
+    responsive: true,
+    property: align-items,
+    values: (
+      start: flex-start,
+      end: flex-end,
+      center: center,
+      baseline: baseline,
+      stretch: stretch,
+    )
+  ),
+  "align-content": (
+    responsive: true,
+    property: align-content,
+    values: (
+      start: flex-start,
+      end: flex-end,
+      center: center,
+      between: space-between,
+      around: space-around,
+      stretch: stretch,
+    )
+  ),
+  "align-self": (
+    responsive: true,
+    property: align-self,
+    values: (
+      auto: auto,
+      start: flex-start,
+      end: flex-end,
+      center: center,
+      baseline: baseline,
+      stretch: stretch,
+    )
+  ),
+  "order": (
+    responsive: true,
+    property: order,
+    values: (
+      first: -1,
+      0: 0,
+      1: 1,
+      2: 2,
+      3: 3,
+      4: 4,
+      5: 5,
+      last: 6,
+    ),
+  ),
+), $utilities);

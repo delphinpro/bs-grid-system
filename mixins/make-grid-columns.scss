@@ -1,29 +1,36 @@
-// Framework grid generation
-//
-// Used only by Bootstrap to generate the correct number of grid classes given
-// any value of `$grid-columns`.
+//== Framework grid generation
+//==
+//== Used only by Bootstrap to generate the correct number of grid classes given
+//== any value of `$grid-columns`.
+//== ===================================================================== ==//
 
 @mixin make-grid-columns($columns: $grid-columns, $gutters: $grid-gutter-widths, $breakpoints: $grid-breakpoints) {
-  $col: 'col';
+  $col: map-get($grid-classes, col);
+  $offset-class: map_get($grid-classes, offset);
 
-  @if ($grid-col-class) {
-    $col: $grid-col-class;
-  }
+  $enable-row-cols: map_get($grid-enable, row-cols-classes);
+  $enable-col-auto: map_get($grid-enable, col-auto-classes);
+  $enable-offset-classes: map_get($grid-enable, offset-classes);
 
   // Common properties for all breakpoints
   %grid-column {
     @include make-col-ready($gutters);
-    //float: left;
-    ////position: relative;
-    //width: 100%;
-    //min-height: 1px; // Prevent columns from collapsing when empty
-    //
-    //@include make-gutters($gutters);
     @content;
   }
 
   @each $breakpoint in map-keys($breakpoints) {
     $infix: breakpoint-infix($breakpoint, $breakpoints);
+
+    // Allow columns to stretch full width below their breakpoints
+    .#{$col}#{$infix} {
+      @extend %grid-column;
+    }
+
+    @if $enable-col-auto {
+      .#{$col}#{$infix}-auto {
+        @extend %grid-column;
+      }
+    }
 
     @for $i from 1 through $columns {
       .#{$col}#{$infix}-#{$i} {
@@ -33,37 +40,44 @@
 
     .#{$col} { /* #{$breakpoint}: #{map_get($breakpoints, $breakpoint)} and up */
       @include media-breakpoint-up($breakpoint, $breakpoints) {
+        // Provide basic `.col-{bp}` classes for equal-width flexbox columns
+        &#{$infix} {
+          flex-basis: 0;
+          flex-grow: 1;
+          max-width: 100%;
+        }
+
+        @at-root {
+          @if $enable-row-cols {
+            @for $i from 1 through $grid-row-columns {
+              .row-cols#{$infix}-#{$i} {
+                @include row-cols($i);
+              }
+            }
+          }
+        }
+
+        @if $enable-col-auto {
+          &#{$infix}-auto {
+            @include make-col-auto();
+          }
+        }
+
+        // Base columns
         @for $i from 1 through $columns {
           &#{$infix}-#{$i} {
             @include make-col($i, $columns);
           }
         }
 
-        $modifiers: [];
-
-        @if($grid-col-pull-classes) {
-          $modifiers: append($modifiers, pull);
-        }
-
-        @if($grid-col-push-classes) {
-          $modifiers: append($modifiers, push);
-        }
-
-        @each $modifier in $modifiers {
-          @for $i from 0 through $columns {
-            &#{$infix}-#{$modifier}-#{$i} {
-              position: relative;
-              @include make-col-modifier($modifier, $i, $columns)
-            }
-          }
-        }
-
-        @if ($grid-col-offset-classes) {
-          // `$columns - 1` because offsetting by the width of an entire row isn't possible
-          @for $i from 0 through ($columns - 1) {
-            @if not ($infix == "" and $i == 0) { // Avoid emitting useless .offset-xs-0
-              &#{$infix}-offset-#{$i} {
-                @include make-col-modifier(offset, $i, $columns)
+        @at-root {
+          @if ($enable-offset-classes) {
+            // `$columns - 1` because offsetting by the width of an entire row isn't possible
+            @for $i from 0 through ($columns - 1) {
+              @if not ($infix == "" and $i == 0) { // Avoid emitting useless .offset-xs-0
+                .#{$offset-class}#{$infix}-#{$i} {
+                  @include make-col-offset($i, $columns)
+                }
               }
             }
           }

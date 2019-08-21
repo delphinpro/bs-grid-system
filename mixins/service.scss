@@ -1,0 +1,55 @@
+//==
+//== Service mixins
+//== ======================================= ==//
+
+@mixin make-gutters($gutters: $grid-gutter-widths, $half: true) {
+  @if type_of($gutters) == number {
+    $gutters: (xs: $gutters);
+  } @else if type_of($gutters) == map {
+  } @else {
+    @error 'Invalid type of parameter.';
+  }
+
+  $prev-gutter: null;
+  @each $breakpoint in map-keys($gutters) {
+    $gutter: map-get($gutters, $breakpoint);
+    @if ($prev-gutter != $gutter) {
+      $prev-gutter: $gutter;
+      @include media-breakpoint-up($breakpoint) {
+        $gutter: map-get($gutters, $breakpoint);
+        $value: if($half, $gutter / 2, $gutter);
+        $value: if(unit($value) == '', $value * 0px, $value);
+        //noinspection CssInvalidFunction
+        $value: if(grid-use-rem(), convert-length($value, rem), $value);
+        padding-right: $value;
+        padding-left: $value;
+      }
+    }
+  }
+}
+
+@mixin make-margins($gutters: $grid-gutter-widths, $half: true) {
+  @if type_of($gutters) == number {
+    $gutters: (xs: $gutters);
+  } @else if type_of($gutters) == map {
+  } @else {
+    @error 'Invalid type of parameter.';
+  }
+
+  $prev-gutter: null;
+  @each $breakpoint in map-keys($gutters) {
+    $gutter: map-get($gutters, $breakpoint);
+    @if ($prev-gutter != $gutter) {
+      $prev-gutter: $gutter;
+      @include media-breakpoint-up($breakpoint) {
+        $gutter: map-get($gutters, $breakpoint);
+        $value: if($half, $gutter / -2, $gutter / -1);
+        $value: if(unit($value) == '', $value * 0px, $value);
+        //noinspection CssInvalidFunction
+        $value: if(grid-use-rem(), convert-length($value, rem), $value);
+        margin-right: $value;
+        margin-left: $value;
+      }
+    }
+  }
+}
